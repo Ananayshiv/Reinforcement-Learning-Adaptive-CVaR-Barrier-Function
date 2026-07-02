@@ -28,7 +28,7 @@ For a CUDA build, install the matching PyTorch wheel for your machine after acti
 Run a short environment rollout to verify the install and save a GIF:
 
 ```bash
-python scripts/test_env.py
+python scripts/test_env.py --episodes 3
 ```
 
 Expected ending:
@@ -67,6 +67,7 @@ Common options can be changed from the shell launcher:
 | Option           | Values / example                              |
 | ---------------- | --------------------------------------------- |
 | Model            | `MODEL=diff_cvar` or `MODEL=ppo_base`         |
+| Environment      | `env=social_nav_var_num` or `env=social_nav`  |
 | Robot            | `ROBOT=single_integrator` or `ROBOT=unicycle` |
 | Number of humans | `env.humans.num_humans=15`                    |
 
@@ -118,7 +119,8 @@ Save rollout GIFs:
 python scripts/eval.py \
   --save-dir outputs/social_nav_var_num/runs/<run> \
   --checkpoint outputs/social_nav_var_num/runs/<run>/ckpt_<step>.pt \
-  --visualize
+  --visualize \
+  env.humans.num_humans=10
 ```
 
 ## Repository Layout
@@ -133,4 +135,4 @@ scripts/     Train, eval, and environment test entrypoints
 
 ## Acknowledgments
 
-Thank the authors of [CrowdNav_Prediction_AttnGraph](https://github.com/Shuijing725/CrowdNav_Prediction_AttnGraph) for the crowd navigation environment and baseline references, and [PPO-for-Beginners](https://github.com/ericyangyu/PPO-for-Beginners) for the clear PPO baseline implementation.
+Thank the authors of [CrowdNav_Prediction_AttnGraph](https://github.com/Shuijing725/CrowdNav_Prediction_AttnGraph) for the crowd navigation environment and baseline references, [PPO-for-Beginners](https://github.com/ericyangyu/PPO-for-Beginners) for the clear PPO baseline implementation, and [locuslab/qpth](https://github.com/locuslab/qpth) for differentiable quadratic programming.
