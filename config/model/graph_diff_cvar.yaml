@@ -1,0 +1,33 @@
+type: graph_diff_cvar
+obs_dim: ${math:6+${env.obs_top_k}*6}
+act_dim: ${env.act_dim}
+
+actor:
+  hidden_dim: 256
+  control_hidden_dim: 256
+  scalar_hidden_dim: 256
+  act: relu
+  action_std_init: 0.5
+  safety_margin: 0.05
+  alpha: 2.0
+  beta_min: 0.05
+  beta: 0.5
+  qp_max_iter: 40
+
+  # Graph representation dimensions.
+  graph_latent_dim: 128
+  graph_human_hidden_dim: 64
+  graph_robot_goal_hidden_dim: 64
+  graph_dropout: 0.0
+
+  gmm_weights: [0.6, 0.2, 0.2]
+  gmm_stds: [0.1, 0.2, 0.2]
+  gmm_lateral_ratio: 0.3
+
+critic:
+  # The first integration intentionally leaves the critic on the existing
+  # fixed relative observation so the actor-side representation change can
+  # be isolated before changing both networks simultaneously.
+  hidden_dim: 256
+  hidden_dim2: 256
+  act: relu
