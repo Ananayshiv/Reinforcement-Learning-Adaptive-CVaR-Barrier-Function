@@ -1,8 +1,23 @@
 import torch
-from cvxopt import solvers, matrix
 import numpy as np
 
+
 def solve_qp_cvxopt(Q, p, G, h, device, dtype, warm_start_x=None):
+    """Solve one evaluation-time QP with CVXOPT.
+
+    CVXOPT is imported lazily because differentiable training uses qpth and
+    unit tests may exercise the learned policy path without invoking this
+    evaluation-only solver. This keeps cvxopt an optional runtime dependency
+    until the function is actually called.
+    """
+    try:
+        from cvxopt import solvers, matrix
+    except ImportError as exc:
+        raise ImportError(
+            "CVXOPT is required for the evaluation-time QP solver. "
+            "Install cvxopt before running single-environment evaluation."
+        ) from exc
+
     # Convert PyTorch tensors to numpy arrays
     if isinstance(Q, torch.Tensor):
         Q = Q.detach().cpu().numpy()

@@ -10,6 +10,9 @@ def get_model_class(method: str):
     if method == "diff_cvar":
         from model.diff_cvar import DiffCVaRBFQP
         return DiffCVaRBFQP
+    if method == "graph_diff_cvar":
+        from model.graph_diff_cvar import GraphDiffCVaRBFQP
+        return GraphDiffCVaRBFQP
     raise ValueError(f"Unknown method {method}")
 
 
@@ -37,7 +40,7 @@ def _actor_kwargs(cfg):
                 "act": actor_cfg.get("act", "relu"),
             }
         )
-    elif method == "diff_cvar":
+    elif method in ("diff_cvar", "graph_diff_cvar"):
         kwargs.update(
             {
                 "hidden_dim": int(actor_cfg.get("hidden_dim", 256)),
@@ -48,6 +51,15 @@ def _actor_kwargs(cfg):
                 "qp_max_iter": int(actor_cfg.get("qp_max_iter", 40)),
             }
         )
+        if method == "graph_diff_cvar":
+            kwargs.update(
+                {
+                    "graph_latent_dim": int(actor_cfg.get("graph_latent_dim", 128)),
+                    "graph_human_hidden_dim": int(actor_cfg.get("graph_human_hidden_dim", 64)),
+                    "graph_robot_goal_hidden_dim": int(actor_cfg.get("graph_robot_goal_hidden_dim", 64)),
+                    "graph_dropout": float(actor_cfg.get("graph_dropout", 0.0)),
+                }
+            )
 
     kwargs.update(get_policy_kwargs(cfg, method))
     for cfg_key, kwarg_key in (
